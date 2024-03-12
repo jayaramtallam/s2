@@ -26,17 +26,11 @@ app = Flask(__name__, template_folder='templates')
 CORS(app)
 chat_history = []
 
-mysql_config = {
-    'host': 'localhost',
-    'user': 'root',
-    'password': '9553641651',
-    'database': 'articles'
-}
 
 def insert_question_and_answer(question, answer,timestamp):
     try:
         # Connect to the MySQL database
-        connection = mysql.connector.connect(**mysql_config)
+        connection = mysql.connector.connect('db.sql')
         cursor = connection.cursor()
 
         # SQL query to insert a new record into the 'supplychain' table
@@ -60,7 +54,7 @@ def insert_question_and_answer(question, answer,timestamp):
 def retrieve_article_content(timestamp):
     try:
         # Connect to the MySQL database
-        connection = mysql.connector.connect(**mysql_config)
+        connection = mysql.connector.connect('db.sql')
         cursor = connection.cursor()
 
         # SQL query to retrieve article content based on the question
