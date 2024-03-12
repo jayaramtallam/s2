@@ -1,1 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL and Text Input App</title>
+    <script src="https://kit.fontawesome.com/4d86daed55.js" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            min-height: 100vh;
+            background-image: url("https://ibb.co/K2rPsZ4");
+background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+            background-size: cover;
+
+        }
+
+        #header {
+            background-color: white;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            position: fixed; /* Fixed position at the top */
+            top: 0;
+            color: black;
+            border: 2px solid #333; /* Border properties for title content */
+            padding: 0px;
+            border-radius: 8px;
+            box-sizing: content-box;
+        }
+
+        #interactionHistory {
+            width: 80%;
+	    height:75vh;
+            text-align: left;
+            margin-top: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 8px;
+background-image: linear-gradient(to right top, #9edd91, #b2d787, #c3d081, #d1ca7f, #dcc380, #e1bd7d, #e6b87b, #ebb27a, #efab72, #f3a46a, #f79c64, #fb945f);
+	    overflow-y:auto;
+        }
+
+        #inputForm {
+            max-width: 80%;
+            width: 80%;
+            background-color: #34495e; /* Darker Blue for Input Form */
+            padding: 20px;
+            box-sizing: border-box;
+            border: 1px solid #2c3e50; /* Border Color */
+            border-radius: 8px;
+            display: flex;
+            
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+	#downloadPdfLink {
+    	position: fixed;
+    	top: 90px;
+    	left: 10px;
+    	background-color: #3498db;
+    	color: white;
+    	border: none;
+    	padding: 5px 10px;
+   	border-radius: 4px;
+    	cursor: pointer;
+    	text-decoration: none;
+    	display: inline-block;
+	}
+
+        #shareLink {
+            position: fixed;
+            top: 90px;
+            right: 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+	 #scrollButton {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+#interactionHistory::-webkit-scrollbar {
+    width: 10px;  /* For Chrome, Safari, and Opera */
+}
+
+#interactionHistory::-webkit-scrollbar-thumb {
+    background-color: #3498db;  /* Color of the thumb */
+}
+	 #downloadPdfLink:hover,
+        #shareLink:hover {
+            background-color: #2980b9; /* Darker Blue on Hover */
+        }
+
+	 .copy-button {
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+
+        input[type="text"] {
+            width: 260%;
+            padding: 10px;
+            margin: 5px 0 0 0;
+            box-sizing: border-box;
+            display: inline-block;
+	    border-radius:10px;
+	    height:100%;
+        }
+
+        input[type="submit"] {
+            background-color: #3498db; /* Blue for Submit Button */
+            color: white;
+            border: solid;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+	#userForm{
+	display:flex;
+	justify-content:space-between;
+	width:100%;
+	}
+
+        input[type="submit"]:hover {
+            background-color: #2980b9; /* Darker Blue on Hover */
+        }
+	.fa-solid.fa-arrow-right{
+        	margin-top: 10%;
+         	font-size:25px;
+	    	background-color: #3498db;
+            	color: white;
+            	height: 70%;
+		padding:10px;
+            border-radius: 10px;
+	}
+#scrollDownLink {
+    position: absolute;
+    top: 50%; /* Adjust the vertical position as needed */
+    right: 20px; /* Adjust the horizontal position as needed */
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+#scrollDownLink:hover {
+    background-color: #2980b9; /* Darker Blue on Hover */
+}
+
+    </style>
+</head>
+<body>
+
+<div id="header" {% if input_submitted %} style="display: none;" {% endif %}>
+    <h1>Supply Chain Management</h1>
+</div>
+
+<!-- Updated HTML code with copy icon for specific keys -->
+
+<div id="interactionHistory">
+    {% if chat_history %}
+       <div>
+    {% for message in chat_history %}
+ 	{% if 'Question' in message %}
+                    <p><strong>{{ 'Question' }}:</strong> {{ message['Question'] }}</p>
+                {% endif %}
+        {% if 'Article content' in message %}
+            <p><strong>{{ 'Article Content' }}:</strong> {{ message['Article content'] }} <span class="copy-button" onclick="copyToClipboard('{{ message['Article content'] }}')"><i class="fas fa-copy"></i></span></p>
+                {% endif %}
+{% if 'Short Article content' in message %}
+            <p><strong>{{ 'Short Article Content' }}:</strong> {{ message['Short Article content'] }} <span class="copy-button" onclick="copyToClipboard('{{ message['Short Article content'] }}')"><i class="fas fa-copy"></i></span></p>
+        {% endif %}
+        {% if 'Classification' in message %}
+                    <p><strong>{{ 'Classification' }}:</strong> {{ message['Classification'] }}</p>
+                {% endif %}
+        {% if 'Summary risk' in message %}
+            <p><strong>{{ 'Summary Risk' }}:</strong> {{ message['Summary risk'] }} <span class="copy-button" onclick="copyToClipboard('{{ message['Summary risk'] }}')"><i class="fas fa-copy"></i></span></p>
+	         {% endif %}        
+{% if 'Opportunity Summary' in message %}
+            <p><strong>{{ 'Opportunity Summary' }}:</strong> {{ message['Opportunity Summary'] }} <span class="copy-button" onclick="copyToClipboard('{{ message['Opportunity Summary'] }}')"><i class="fas fa-copy"></i></span></p>
+                {% endif %}
+           {% if message is mapping %}
+                    {% for key, value in message.items() %}
+                        {% if key not in ['Question','Article content','Summary risk','Opportunity Summary','Short Article content','Classification'] %}
+                            <p><strong>{{ key }}:</strong> {{ value }}</p>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>{{ message }}</p>
+                {% endif %}
+    {% endfor %}
+</div>
+    {% endif %}
+    <button id="scrollButton" onclick="scrollToTop()"><i class="fa-solid fa-arrow-up"></i></button>
+</div>
+<a href="javascript:void(0);" onclick="scrollToInteractionHistory()" id="scrollDownLink"><i class="fa-solid fa-arrow-down"></i></a>
+
+<div id="inputForm">
+    <!-- Updated form with standard form submission -->
+   <form action="/" method="post" id="userForm">
+        <input type="text" id="userInput" name="userInput" placeholder="Enter URL or Text" required>
+        <!-- Replace the input[type="submit"] button with a send icon -->
+        <button type="submit" onclick="sendQuestion()" style="background-color: #3498db; border: none; cursor: pointer; padding-top:6px; padding-bottom: 16px;">
+<i class="fa-solid fa-arrow-right"></i>  
+      </button>
+</form>
+<!-- Add this link in your HTML -->
+</div>
+<a href="{{ url_for('download_pdf') }}" id="downloadPdfLink" target="_blank"><i class="fa-solid fa-download"></i></a>
+
+<a href="#" id="shareLink"><i class="fa-solid fa-share-from-square"></i></a>
+
+<!-- JavaScript function to send a question asynchronously -->
+<script>
+    function sendQuestion() {
+        // Get the user input
+        var userInput = $('#userInput').val();
+
+        // Send an asynchronous POST request to the server
+        $.ajax({
+            type: 'POST',
+            url: '/',
+            data: { userInput: userInput },
+            success: function(response) {
+                // Update the chat history div with the new content
+                $('#interactionHistory').html(response);
+            }
+        });
+    }
+    
+    function scrollToTop() {
+    document.getElementById('interactionHistory').scrollTop = 0;
+    }
+function checkScrollPosition() {
+        var interactionHistory = document.getElementById('interactionHistory');
+        var scrollButton = document.getElementById('scrollButton');
+
+        if (interactionHistory.scrollTop > 0) {
+            scrollButton.style.display = 'block';
+        } else {
+            scrollButton.style.display = 'none';
+        }
+    }
+window.addEventListener('scroll', function () {
+        // Call the function when the body scrolls
+        checkScrollPosition();
+    });
+   function copyToClipboard(text) {
+       var textarea = document.createElement("textarea");
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    alert('Copied to clipboard: ' + text);
+    }
+
+   function downloadPDF() {
+        // Trigger a request to the Flask route responsible for PDF generation
+        window.location.href = '/download_pdf';
+    }
+  function scrollToInteractionHistory() {
+        var interactionHistory = document.getElementById('interactionHistory');
+        interactionHistory.scrollTop = interactionHistory.scrollHeight;
+    }
+
+ document.addEventListener('DOMContentLoaded', function() {
+        // Get the share link element
+        var shareLink = document.getElementById('shareLink');
+
+        // Add a click event listener to trigger the share dialog
+        shareLink.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // Check if the Web Share API is supported
+            if (navigator.share) {
+                // Use the Web Share API to trigger the native sharing dialog
+                navigator.share({
+                    title: document.title,
+                    text: 'Check out this page!',
+                    url: window.location.href
+                })
+                .then(() => console.log('Shared successfully'))
+                .catch((error) => console.error('Error sharing:', error));
+            } else {
+                // Fallback for browsers that do not support the Web Share API
+                alert('Sharing is not supported in your browser.');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
 
